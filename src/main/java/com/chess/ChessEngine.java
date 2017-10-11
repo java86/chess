@@ -12,7 +12,7 @@ public class ChessEngine {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// test.bat中的命令是ipconfig/all
 		System.out.println("dd\r\n" + "ss");
-		final String cmd = "D:\\Users\\86\\chessEngine\\cyclone.exe";
+		final String cmd = "chessEngine\\cyclone.exe";
 		// 执行命令
 		p = Runtime.getRuntime().exec(cmd);
 		new Thread(new Runnable() {
