@@ -33,19 +33,19 @@ public class ScreenUtilities {
 	private static final int CChessDefaultHeight = 624;// 新中国象棋默认高度
 	private static final int ChessPieceDefaultWidth = 148;// 新中国象棋棋盘格子默认宽度
 	private static final int ChessPieceDefaultHeight = 25;// 新中国象棋默认格子高度
-	private static final Point[] points = new Point[] { new Point(335, 25), new Point(340, 50), new Point(335, 25),
-			new Point(335, 25), new Point(335, 25), new Point(340, 50), new Point(340, 50), new Point(340, 50),
-			new Point(335, 25), new Point(340, 50), new Point(340, 50), new Point(340, 50), new Point(340, 50),
-			new Point(340, 50), new Point(335, 25), new Point(335, 25), new Point(335, 25), new Point(340, 50),
-			new Point(340, 50), new Point(335, 25), new Point(335, 25), new Point(335, 25), new Point(340, 50),
-			new Point(340, 50), new Point(340, 50), new Point(335, 25), new Point(340, 50), new Point(340, 50),
-			new Point(340, 50), new Point(340, 50), new Point(340, 50), new Point(335, 25), new Point(335, 25),
-			new Point(335, 25), new Point(340, 27) };// 可以放棋子的格子坐标
+	private static final Point startP = new Point(0, 0);// 车坐标点;
+	private static final Point[] points = new Point[90];// 可以放棋子的格子坐标
 	private static final String[] flag = new String[] { "a", "b", "c", "d", "e", "f", "g", "h", "i" };
 	private static final Map<String, Point> bestmoveMap = new HashMap<>();
-	private static final Map<Point, MBFImage> needCheckPointMBF = new HashMap<>();
-	private static final Map<Point, Integer[]> needCheckPoint = new HashMap<>();
+	private static final Map<Point, MBFImage> needCheckPointMBF = new HashMap<>();// 需要检查的点的图像
+	private static final Map<Point, Integer[]> needCheckPoint = new HashMap<>();// 需要检查的点的坐标、宽度和高度
 	static {
+		for (int i = 0; i < 90; i++) {
+			int indexOfLine = i % 9;
+			int lineNum = i / 9;
+			points[i] = new Point(startP.x + ChessPieceDefaultWidth * indexOfLine, startP.y + ChessPieceDefaultHeight * lineNum);
+
+		}
 		int length = points.length;
 		for (int index = 0; index < length; index++) {
 			int flagIndex = index % 9;
