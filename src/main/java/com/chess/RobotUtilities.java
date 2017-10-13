@@ -23,7 +23,7 @@ public class RobotUtilities {
 		// robot.mousePress(KeyEvent.BUTTON1_MASK);
 		// robot.mouseRelease(KeyEvent.BUTTON1_MASK);
 		// robot.mouseWheel(10000);
-		refreshFen("g3g4");
+		refreshFen("h0g2");
 		System.out.println(preFen);
 	}
 
@@ -41,114 +41,29 @@ public class RobotUtilities {
 		String[] lineFens = preFen.split("/");
 		int length = lineFens.length;
 		// 处理起点坐标
-		char find = 0;
 		String startPoint = bestmove.substring(0, 2);
 		Integer startLineNum = length - (Integer.valueOf(startPoint.charAt(1)) - 48) - 1;
 		int startIndexOfLine = moveflag.indexOf(startPoint.charAt(0));
 		String startlineFen = lineFens[startLineNum];// 找出起点坐标所在行
 		// 找出位于起点坐标的棋子，移除
 		char[] startChar = startlineFen.toCharArray();
-		int startCount = -1;
-		int startCharLength = startChar.length;
-		for (int index = 0; index < startCharLength; index++) {
-			char c = startChar[index];
-			boolean digit = Character.isDigit(c);
-			if (digit)
-				startCount += Integer.valueOf(c) - 48;
-			else
-				startCount++;
-			if (startCount == startIndexOfLine) {
-				find = c;
-				startChar[index] = '1';
-				break;
-			}
-		}
-		// 替换起点坐标所在行的fen
-		char[] replaceFen = new char[9];
-		Integer sum = 0;
-		for (int index = 0; index < startCharLength; index++) {
-			char c = startChar[index];
-			boolean digit = Character.isDigit(c);
-			if (digit) {
-				sum += Integer.valueOf(c) - 48;
-				continue;
-			} else {
-				if (sum != 0) {
-					replaceFen[index] = c;
-					replaceFen[index - 1] = (char) (sum + 48);
-					sum = 0;
-				} else {
-					replaceFen[index] = c;
-				}
-
-			}
-		}
-		if (sum != 0)
-			replaceFen[8] = (char) (sum + 48);
-		String startReplace = new String(replaceFen).replaceAll("\0+", "");// 去除空格，char默认值为\0
+		char[] startCharCopy = charCopy(startChar);
+		char find = startCharCopy[startIndexOfLine];
+		startCharCopy[startIndexOfLine] = 0;
+		// 更新起点所在行的fen
+		String startReplace = sumSpace(startCharCopy);
 		lineFens[startLineNum] = startReplace;
 		// 处理终点坐标
 		String endPoint = bestmove.substring(2, 4);
 		Integer endLineNum = length - (Integer.valueOf(endPoint.charAt(1)) - 48) - 1;
 		int endIndexOfLine = moveflag.indexOf(endPoint.charAt(0));
 		String endLineFen = lineFens[endLineNum];// 找出终点坐标所在行
-		// 找出终点坐标的索引
+		// 找出终点坐标的格子，替换成走棋后的棋子
 		char[] endChar = endLineFen.toCharArray();
-		int endCharLength = endChar.length;
-		int endCount = -1;
-		int findIndex = 0;
-		for (int index = 0; index < endCharLength; index++) {
-			char c = endChar[index];
-			boolean digit = Character.isDigit(c);
-			if (digit)
-				endCount += Integer.valueOf(c) - 48;
-			else
-				endCount++;
-
-			if (endCount >= endIndexOfLine) {
-				findIndex = index;
-				break;
-			}
-		}
-		// 替换终点坐标的所在行的fen
-		char[] endReplaceC = new char[10];
-		for (int index = 0; index < endCharLength; index++) {
-			char c = endChar[index];
-			if (index < findIndex) {
-				endReplaceC[index] = c;
-			} else if (index == findIndex) {
-				boolean digit = Character.isDigit(c);
-				if (digit) {
-					Integer cValue = Integer.valueOf(c);
-					int char2int = cValue - 48;
-					int reallyIndex = index + char2int - 1;
-					if (reallyIndex > endIndexOfLine) {
-						// 分成三部分
-						if (endIndexOfLine == index) {
-							endReplaceC[index] = find;
-							endReplaceC[index + 1] = (char) (cValue - 1);
-						} else {
-							endReplaceC[index] = (char) (endIndexOfLine - index + 48);
-							endReplaceC[index + 1] = find;
-							endReplaceC[index + 2] = (char) (reallyIndex - endIndexOfLine + 48);
-						}
-					} else {
-						if (char2int > 1) {
-							endReplaceC[index] = (char) (cValue - 1);
-							endReplaceC[index + 1] = find;
-						} else {
-							endReplaceC[index] = find;
-						}
-					}
-				} else {
-					endReplaceC[index] = find;
-				}
-
-			} else {
-				endReplaceC[index + 2] = c;
-			}
-		}
-		String endReplace = new String(endReplaceC).replaceAll("\0+", "");
+		char[] endCharCopy = charCopy(endChar);
+		endCharCopy[endIndexOfLine] = find;
+		// 更新终点所在行的fen
+		String endReplace = sumSpace(endCharCopy);
 		lineFens[endLineNum] = endReplace;
 		// 更新fen
 		StringBuilder sb = new StringBuilder();
@@ -157,6 +72,44 @@ public class RobotUtilities {
 		}
 		preFen = sb.substring(0, sb.length() - 1);
 
+	}
+
+	private static String sumSpace(char[] startCharCopy) {
+		int countSpace = 0;
+		char[] starCharReplace = new char[9];
+		for (int i = 0; i < 9; i++) {
+			char c = startCharCopy[i];
+			if (c == 0) {
+				countSpace++;
+				continue;
+			}
+			if (countSpace != 0) {
+				starCharReplace[i - 1] = (char) (countSpace + 48);
+				countSpace = 0;
+			}
+			starCharReplace[i] = c;
+		}
+		if (countSpace != 0)
+			starCharReplace[8] = (char) (countSpace + 48);
+		String startReplace = new String(starCharReplace).replaceAll("\0+", "");// 去除空格，char默认值为\0
+		return startReplace;
+	}
+
+	private static char[] charCopy(char[] startChar) {
+		char[] startCharCopy = new char[9];
+		int startCharLength = startChar.length;
+		int setIndex = 0;
+		for (int i = 0; i < startCharLength; i++) {
+			char c = startChar[i];
+			boolean digit = Character.isDigit(c);
+			if (digit) {
+				setIndex += Integer.valueOf(c) - 48;
+			} else {
+				startCharCopy[setIndex] = c;
+				setIndex++;
+			}
+		}
+		return startCharCopy;
 	}
 
 	public static String prepareToPlay() throws AWTException {
