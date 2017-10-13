@@ -25,8 +25,8 @@ public class FenUtilities {
 	// 加载棋子图像
 	static {
 		try {
-			pieces.put("s", ImageUtilities.readMBF(new File("D:\\Users\\86\\cut.jpg")));
-			pieces.put("N", ImageUtilities.readMBF(new File("D:\\Users\\86\\blank.jpg")));
+			pieces.put("s", ImageUtilities.readMBF(new File("chessImage\\cut.jpg")));
+			pieces.put("N", ImageUtilities.readMBF(new File("chessImage\\blank.jpg")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,7 +61,8 @@ public class FenUtilities {
 					tempMinScore = distanceScore;
 				}
 			}
-			if ("s".equals(tempString)) {
+			// 当前格子没有棋子
+			if (tempString.contains("s")) {
 				countSpace++;
 				count++;
 				tempMinScore = Double.MAX_VALUE;
@@ -80,7 +81,6 @@ public class FenUtilities {
 		}
 		if (countSpace != 0)
 			sb.append(countSpace);
-		sb.append(" r");
 		return sb.toString();
 	}
 
