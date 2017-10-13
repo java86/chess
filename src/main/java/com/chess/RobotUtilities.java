@@ -177,7 +177,7 @@ public class RobotUtilities {
 				continue;
 			preFen = fenByImages;
 			initTag(fenByImages);
-			fenByImages = "position fen" + fenByImages + " " + flag + "\r\n";
+			fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
 			return fenByImages;
 
 		}
