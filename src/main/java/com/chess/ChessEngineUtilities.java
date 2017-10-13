@@ -21,9 +21,9 @@ public class ChessEngineUtilities {
 		String bestmove = null;
 		while (true) {
 			bestmove = br.readLine();
-			// System.out.println(bestmove);
-			if (bestmove.startsWith("bestmove"))
-				return bestmove;
+			if (bestmove.startsWith("bestmove")) {
+				return bestmove.substring(9, 13);
+			}
 		}
 	}
 }

@@ -23,7 +23,7 @@ public class RobotUtilities {
 		// robot.mousePress(KeyEvent.BUTTON1_MASK);
 		// robot.mouseRelease(KeyEvent.BUTTON1_MASK);
 		// robot.mouseWheel(10000);
-		refreshFen("g0e2");
+		refreshFen("g3g4");
 		System.out.println(preFen);
 	}
 

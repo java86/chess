@@ -20,6 +20,8 @@ public class StartChessEngine implements Runnable {
 		String bestmove = ChessEngineUtilities
 				.getBastMove("position fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w\r\n", p);
 		System.out.println(bestmove);
+		String bestmove2 = ChessEngineUtilities.getBastMove("position fen 5k3/9/9/9/9/9/9/R8/9/4K4 w\r\n", p);
+		System.out.println(bestmove2);
 		// new Thread(new StartChessEngine(p)).start();
 	}
 
