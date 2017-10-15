@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
 import org.openimaj.feature.DoubleFVComparison;
+import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.pixel.statistics.HistogramModel;
@@ -29,12 +30,13 @@ import org.openimaj.math.statistics.distribution.MultidimensionalHistogram;
  * @date 2017年10月11日 下午3:36:37
  */
 public class ScreenUtilities {
-	private static final int CChessDefaultWidth = 855;// 新中国象棋棋盘默认宽度
-	private static final int CChessDefaultHeight = 624;// 新中国象棋默认高度
-	private static final int ChessPieceDefaultWidth = 148;// 新中国象棋棋盘格子默认宽度
-	private static final int ChessPieceDefaultHeight = 25;// 新中国象棋默认格子高度
-	private static final Point startP = new Point(0, 0);// 车坐标点;
+	private static final int CChessDefaultWidth = 1022;// 新中国象棋棋盘默认宽度
+	private static final int CChessDefaultHeight = 734;// 新中国象棋默认高度
+	private static final int ChessPieceDefaultWidth =34;// 新中国象棋棋盘格子默认宽度
+	private static final int ChessPieceDefaultHeight = 28;// 新中国象棋默认格子高度
+	private static final Point startP = new Point(422, 86);// 车坐标点;
 	private static final Point[] points = new Point[90];// 可以放棋子的格子坐标
+//	private static final Point[] points = new Point[]{new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100)};// 可以放棋子的格子坐标
 	private static final String[] flag = new String[] { "a", "b", "c", "d", "e", "f", "g", "h", "i" };
 	private static final Map<String, Point> bestmoveMap = new HashMap<>();
 	private static final Map<Point, MBFImage> needCheckPointMBF = new HashMap<>();// 需要检查的点的图像
@@ -43,7 +45,7 @@ public class ScreenUtilities {
 		for (int i = 0; i < 90; i++) {
 			int indexOfLine = i % 9;
 			int lineNum = i / 9;
-			points[i] = new Point(startP.x + ChessPieceDefaultWidth * indexOfLine, startP.y + ChessPieceDefaultHeight * lineNum);
+			points[i] = new Point(startP.x + 57 * indexOfLine, startP.y + 57 * lineNum);
 
 		}
 		int length = points.length;
@@ -53,13 +55,15 @@ public class ScreenUtilities {
 			bestmoveMap.put(flag[flagIndex] + lineNum, points[index]);
 		}
 		try {
-			needCheckPointMBF.put(new Point(1, 1), ImageUtilities.readMBF(new File("chessImage\\cut.jpg")));
-			needCheckPointMBF.put(new Point(1, 2), ImageUtilities.readMBF(new File("chessImage\\blank.jpg")));
+			needCheckPointMBF.put(new Point(409, 676), ImageUtilities.readMBF(new File("checkImage\\start.png")));
+			needCheckPointMBF.put(new Point(593, 395), ImageUtilities.readMBF(new File("checkImage\\sure.png")));
+			needCheckPointMBF.put(new Point(584, 394), ImageUtilities.readMBF(new File("checkImage\\agree.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		needCheckPoint.put(new Point(1, 1), new Integer[] { 1, 1 });
-		needCheckPoint.put(new Point(1, 1), new Integer[] { 1, 1 });
+		needCheckPoint.put(new Point(409, 676), new Integer[] { 53, 29 });
+		needCheckPoint.put(new Point(593, 395), new Integer[] { 81, 29 });
+		needCheckPoint.put(new Point(584, 394), new Integer[] { 78, 28 });
 	}
 
 	public static List<MBFImage> grapChessPiecesByScreen() throws AWTException {
@@ -118,8 +122,8 @@ public class ScreenUtilities {
 		// FenUtilities.getFenByImages(grapChessPiecesByScreen());
 		// System.out.println(fenByImages);
 		grapChessPiecesByScreen2();
-		System.out.println(getPointsByBestmove("h6h6")[0]);
-		System.out.println(bestmoveMap.get("h6"));
+//		System.out.println(getPointsByBestmove("h6h6")[0]);
+//		System.out.println(bestmoveMap.get("h6"));
 	}
 
 	public static Point needClick() throws AWTException {
@@ -134,8 +138,10 @@ public class ScreenUtilities {
 			model.estimateModel(value);
 			MultidimensionalHistogram mbfH = model.histogram.clone();
 			double distanceScore = checkH.compare(mbfH, DoubleFVComparison.EUCLIDEAN);
-			if (distanceScore < 0.0086)
-				return key;
+			if (distanceScore < 0.086){
+				Integer[] sizes = needCheckPoint.get(key);
+				return new Point(key.x+sizes[0]/2,+key.y+sizes[1]/2);
+			}
 		}
 		return null;
 	}

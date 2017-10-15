@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class StartChessEngine implements Runnable {
-	private Process p;
+	private  Process p;
+	public static long updateTime=System.currentTimeMillis();
 
 	public StartChessEngine(Process p) {
 		this.p = p;
@@ -12,17 +13,31 @@ public class StartChessEngine implements Runnable {
 
 	public static void main(String[] args) throws IOException {
 		// 使引擎在空闲状态
-		final String cmd = "chessEngine\\cyclone.exe";
+		final String cmd = "chessEngine\\XQSPIRIT.exe";
 		Process p = Runtime.getRuntime().exec(cmd);
-		OutputStream outputStream = p.getOutputStream();
+		final OutputStream outputStream = p.getOutputStream();
 		outputStream.write("ucci\r\n".getBytes());
+		outputStream.write("setoption Hash 520\r\n".getBytes());
 		outputStream.flush();
-		String bestmove = ChessEngineUtilities
-				.getBastMove("position fen rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w\r\n", p);
-		System.out.println(bestmove);
-		String bestmove2 = ChessEngineUtilities.getBastMove("position fen 5k3/9/9/9/9/9/9/R8/9/4K4 w\r\n", p);
-		System.out.println(bestmove2);
-		// new Thread(new StartChessEngine(p)).start();
+		 new Thread(new StartChessEngine(p)).start();
+//		 new Thread(new Runnable(){
+//			@Override
+//			public void run() {
+//				long currentTimeMillis = System.currentTimeMillis();
+//				while(true){
+//					if(currentTimeMillis-updateTime>1000*20){
+//						try {
+//							outputStream.write("stop\r\n".getBytes());
+//							outputStream.flush();
+//							System.out.println("stop");
+//							Thread.sleep(2000);
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//					}
+//				}
+//			}}).start();
+//		 position fen 3a1kb2/4a4/4b4/9/9/6np1/9/9/3p5/4K3c w
 	}
 
 	@Override

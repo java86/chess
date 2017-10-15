@@ -1,5 +1,6 @@
 package com.chess;
 
+import java.awt.AWTException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,8 +26,23 @@ public class FenUtilities {
 	// 加载棋子图像
 	static {
 		try {
-			pieces.put("s", ImageUtilities.readMBF(new File("chessImage\\cut.jpg")));
-			pieces.put("N", ImageUtilities.readMBF(new File("chessImage\\blank.jpg")));
+			pieces.put("R", ImageUtilities.readMBF(new File("chessImage\\r2.png")));
+			pieces.put("N", ImageUtilities.readMBF(new File("chessImage\\n2.png")));
+			pieces.put("B", ImageUtilities.readMBF(new File("chessImage\\b2.png")));
+			pieces.put("A", ImageUtilities.readMBF(new File("chessImage\\a2.png")));
+			pieces.put("K", ImageUtilities.readMBF(new File("chessImage\\k2.png")));
+			pieces.put("C", ImageUtilities.readMBF(new File("chessImage\\c2.png")));
+			pieces.put("P", ImageUtilities.readMBF(new File("chessImage\\p2.png")));
+			pieces.put("r", ImageUtilities.readMBF(new File("chessImage\\r.png")));
+			pieces.put("n", ImageUtilities.readMBF(new File("chessImage\\n.png")));
+			pieces.put("b", ImageUtilities.readMBF(new File("chessImage\\b.png")));
+			pieces.put("a", ImageUtilities.readMBF(new File("chessImage\\a.png")));
+			pieces.put("k", ImageUtilities.readMBF(new File("chessImage\\k.png")));
+			pieces.put("c", ImageUtilities.readMBF(new File("chessImage\\c.png")));
+			pieces.put("p", ImageUtilities.readMBF(new File("chessImage\\p.png")));
+			for(int i=0;i<90;i++){
+				pieces.put("s"+i, ImageUtilities.readMBF(new File("chessImage\\"+i+".png")));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -84,7 +100,10 @@ public class FenUtilities {
 		return sb.toString();
 	}
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, AWTException {
+		List<MBFImage> grapChessPiecesByScreen = ScreenUtilities.grapChessPiecesByScreen();
+		String fenByImages = getFenByImages(grapChessPiecesByScreen);
+		System.out.println(fenByImages);
 	}
 
 }
