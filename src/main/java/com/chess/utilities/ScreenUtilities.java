@@ -17,7 +17,6 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
 import org.openimaj.feature.DoubleFVComparison;
-import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.pixel.statistics.HistogramModel;
@@ -34,11 +33,10 @@ import com.chess.model.Point;
 public class ScreenUtilities {
 	private static final int CChessDefaultWidth = 1022;// 新中国象棋棋盘默认宽度
 	private static final int CChessDefaultHeight = 734;// 新中国象棋默认高度
-	private static final int ChessPieceDefaultWidth =34;// 新中国象棋棋盘格子默认宽度
+	private static final int ChessPieceDefaultWidth = 34;// 新中国象棋棋盘格子默认宽度
 	private static final int ChessPieceDefaultHeight = 28;// 新中国象棋默认格子高度
 	private static final Point startP = new Point(422, 86);// 车坐标点;
 	private static final Point[] points = new Point[90];// 可以放棋子的格子坐标
-//	private static final Point[] points = new Point[]{new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100),new Point(50,100)};// 可以放棋子的格子坐标
 	private static final String[] flag = new String[] { "a", "b", "c", "d", "e", "f", "g", "h", "i" };
 	private static final Map<String, Point> bestmoveMap = new HashMap<>();
 	private static final Map<Point, MBFImage> needCheckPointMBF = new HashMap<>();// 需要检查的点的图像
@@ -120,12 +118,7 @@ public class ScreenUtilities {
 	}
 
 	public static void main(String[] args) throws AWTException, InterruptedException, IOException {
-		// String fenByImages =
-		// FenUtilities.getFenByImages(grapChessPiecesByScreen());
-		// System.out.println(fenByImages);
 		grapChessPiecesByScreen2();
-//		System.out.println(getPointsByBestmove("h6h6")[0]);
-//		System.out.println(bestmoveMap.get("h6"));
 	}
 
 	public static Point needClick() throws AWTException {
@@ -140,9 +133,9 @@ public class ScreenUtilities {
 			model.estimateModel(value);
 			MultidimensionalHistogram mbfH = model.histogram.clone();
 			double distanceScore = checkH.compare(mbfH, DoubleFVComparison.EUCLIDEAN);
-			if (distanceScore < 0.086){
+			if (distanceScore < 0.086) {
 				Integer[] sizes = needCheckPoint.get(key);
-				return new Point(key.x+sizes[0]/2,+key.y+sizes[1]/2);
+				return new Point(key.x + sizes[0] / 2, +key.y + sizes[1] / 2);
 			}
 		}
 		return null;
