@@ -1,4 +1,4 @@
-package com.chess;
+package com.chess.model;
 
 public class Point {
 	public int x;

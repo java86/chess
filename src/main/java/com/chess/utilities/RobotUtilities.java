@@ -1,4 +1,4 @@
-package com.chess;
+package com.chess.utilities;
 
 import java.awt.AWTException;
 import java.util.Arrays;
@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.openimaj.image.MBFImage;
+
+import com.chess.constant.ChessFlag;
+import com.chess.model.Point;
 
 public class RobotUtilities {
 	private static String flag;// 标明我方是红还是黑

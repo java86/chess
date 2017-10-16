@@ -31,6 +31,8 @@ import org.openimaj.math.model.fit.RANSAC;
 import org.openimaj.math.statistics.distribution.MultidimensionalHistogram;
 import org.openimaj.util.pair.Pair;
 
+import com.chess.utilities.ScreenUtilities;
+
 /**
  * Hello world!
  *

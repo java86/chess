@@ -1,4 +1,4 @@
-package com.chess;
+package com.chess.utilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
+
+import com.chess.StartChessEngine;
 
 public class ChessEngineUtilities {
 	private static Logger log = Logger.getLogger(ChessEngineUtilities.class);

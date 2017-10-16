@@ -1,4 +1,4 @@
-package com.chess;
+package com.chess.utilities;
 
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -22,6 +22,8 @@ import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.pixel.statistics.HistogramModel;
 import org.openimaj.math.statistics.distribution.MultidimensionalHistogram;
+
+import com.chess.model.Point;
 
 /**
  * 获取屏幕棋盘中的棋子，棋盘左上角需和屏幕坐标(0,0)对齐

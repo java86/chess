@@ -1,4 +1,4 @@
-package com.chess;
+package com.chess.utilities;
 
 import java.awt.AWTException;
 import java.io.File;
