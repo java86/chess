@@ -27,11 +27,11 @@ public class ChessEngineUtilities {
 		while (true) {
 			bestmove = br.readLine();
 			if (bestmove.startsWith("bestmove")) {
-				log.info(bestmove);
+				log.debug(bestmove);
 				StartChessEngine.updateTime = System.currentTimeMillis();
 				return bestmove.substring(9, 13);
 			} else if (bestmove.startsWith("nobestmove")) {
-				log.info(bestmove);
+				log.debug(bestmove);
 				StartChessEngine.updateTime = System.currentTimeMillis();
 				return "null";
 			}

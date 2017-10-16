@@ -73,7 +73,7 @@ class StopCommand implements Runnable {
 				OutputStream outputStream = p.getOutputStream();
 				outputStream.write("stop\r\n".getBytes());
 				outputStream.flush();
-				log.info("stop");
+				log.debug("stop");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

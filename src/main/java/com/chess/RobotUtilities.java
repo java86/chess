@@ -60,7 +60,7 @@ public class RobotUtilities {
 		try {
 			if ("b".equals(flag)) {
 				bestmove = transBestmove(bestmove);
-				log.info("trans:  " + bestmove);
+				log.debug("trans:  " + bestmove);
 			}
 			// 根据bestmove拿到屏幕坐标
 			Point[] clickPoints = ScreenUtilities.getPointsByBestmove(bestmove);
@@ -124,6 +124,7 @@ public class RobotUtilities {
 			sb.append(s).append("/");
 		}
 		preFen = sb.substring(0, sb.length() - 1);
+		log.info("playFen:" + preFen);
 
 	}
 
@@ -183,17 +184,17 @@ public class RobotUtilities {
 				Thread.sleep(3000);
 				continue;
 			}
+			// check
+			if (check(fenByImages))
+				continue;
+			log.debug("oldFen:" + preFen);
 			log.info("newFen:" + fenByImages);
-			log.info("oldFen:" + preFen);
 			preFen = fenByImages;
 			initTag(fenByImages);
 			if ("b".equals(flag))
 				fenByImages = transFen(fenByImages);
-			// check
-			if (check(fenByImages))
-				continue;
 			fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
-			log.info(fenByImages);
+			log.debug(fenByImages);
 			return fenByImages;
 		}
 	}
