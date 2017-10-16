@@ -6,11 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
+import org.apache.log4j.Logger;
+
 public class ChessEngineUtilities {
+	private static Logger log = Logger.getLogger(ChessEngineUtilities.class);
+
 	public static String getBastMove(String fen, Process p) throws IOException {
 		OutputStream outputStream = p.getOutputStream();
 		outputStream.write(fen.getBytes());
-		// outputStream.write("go depth 10\r\n".getBytes());
+		// outputStream.write("go depth 13\r\n".getBytes());
 		outputStream.write("go time 30 increase 0\r\n".getBytes());
 		outputStream.flush();
 		// 取得命令结果的输出流
@@ -23,11 +27,11 @@ public class ChessEngineUtilities {
 		while (true) {
 			bestmove = br.readLine();
 			if (bestmove.startsWith("bestmove")) {
-				System.out.println(bestmove);
+				log.info(bestmove);
 				StartChessEngine.updateTime = System.currentTimeMillis();
 				return bestmove.substring(9, 13);
 			} else if (bestmove.startsWith("nobestmove")) {
-				System.out.println(bestmove);
+				log.info(bestmove);
 				StartChessEngine.updateTime = System.currentTimeMillis();
 				return "null";
 			}

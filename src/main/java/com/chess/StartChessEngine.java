@@ -59,7 +59,7 @@ public class StartChessEngine implements Runnable {
 class StopCommand implements Runnable {
 	private Process p;
 	private static final long LIMITTIME = 1000 * 20;// 引擎最多可以考虑的时间，超过就要马上返回下法。
-	protected Logger log = Logger.getLogger(StopCommand.class);
+	private Logger log = Logger.getLogger(StopCommand.class);
 
 	public StopCommand(Process p) {
 		this.p = p;

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.openimaj.image.MBFImage;
 
 public class RobotUtilities {
@@ -17,8 +18,10 @@ public class RobotUtilities {
 	private static final String BLACK = "b";// 黑方
 	private static final List<Character> moveflag = Arrays
 			.asList(new Character[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' });
-	private static final Map<Character,Character> transMap =new HashMap<>();
-	static{
+	private static final Map<Character, Character> transMap = new HashMap<>();
+	private static final String[] checkStrings = new String[] { "b", "r" };
+	private static Logger log = Logger.getLogger(RobotUtilities.class);
+	static {
 		transMap.put('a', 'i');
 		transMap.put('b', 'h');
 		transMap.put('c', 'g');
@@ -54,10 +57,10 @@ public class RobotUtilities {
 	}
 
 	public static void playByBestmove(String bestmove) throws AWTException {
-		try{
-			if("b".equals(flag)){
-				bestmove=transBestmove(bestmove);
-				System.out.println("trans:  "+bestmove);
+		try {
+			if ("b".equals(flag)) {
+				bestmove = transBestmove(bestmove);
+				log.info("trans:  " + bestmove);
 			}
 			// 根据bestmove拿到屏幕坐标
 			Point[] clickPoints = ScreenUtilities.getPointsByBestmove(bestmove);
@@ -65,21 +68,21 @@ public class RobotUtilities {
 			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities.grapChessPiecesByScreen();
 			// 获取当前局面的fen
 			String fenByImages = FenUtilities.getFenByImages(grapChessPiecesByScreen);
-			if (!fenByImages.equals(preFen))//对方重新走棋。
+			if (!fenByImages.equals(preFen))// 对方重新走棋。
 				return;
 			// 依次点击屏幕
 			MouseClickUtilities.clickInOrder(clickPoints);
 			// 更新当前局面
 			refreshFen(bestmove);
-		}catch(Exception e){
-			return;//不处理，有可能是切换界面导致的
+		} catch (Exception e) {
+			return;// 不处理，有可能是切换界面导致的
 		}
 
 	}
 
 	private static String transBestmove(String bestmove) {
-		StringBuilder sb=new StringBuilder();
-		for(int i=0;i<4;i++){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 4; i++) {
 			char charAt = bestmove.charAt(i);
 			Character character = transMap.get(charAt);
 			sb.append(character);
@@ -175,43 +178,47 @@ public class RobotUtilities {
 			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities.grapChessPiecesByScreen();
 			// 获取当前局面的fen
 			String fenByImages = FenUtilities.getFenByImages(grapChessPiecesByScreen);
-			System.out.println("newFen:"+fenByImages);
-			System.out.println("oldFen:"+preFen);
 			// 对方还没走棋，继续下一个循环
-			if (fenByImages.equals(preFen)||fenByImages.equals("9/9/9/9/9/9/9/9/9/9")){
+			if (fenByImages.equals(preFen) || fenByImages.equals("9/9/9/9/9/9/9/9/9/9")) {
 				Thread.sleep(3000);
 				continue;
 			}
+			log.info("newFen:" + fenByImages);
+			log.info("oldFen:" + preFen);
 			preFen = fenByImages;
 			initTag(fenByImages);
-			if("b".equals(flag))
-				fenByImages=transFen(fenByImages);
-			//check
-			if(check(fenByImages))
+			if ("b".equals(flag))
+				fenByImages = transFen(fenByImages);
+			// check
+			if (check(fenByImages))
 				continue;
 			fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
-			System.out.println(fenByImages);
+			log.info(fenByImages);
 			return fenByImages;
 		}
 	}
 
 	private static boolean check(String fenByImages) {
-		int count=0;
-		Pattern p = Pattern.compile("b");
-	    Matcher m = p.matcher(fenByImages);
-	    while (m.find()) {
-	        count++;
-	    }
-		return count>4;
+		for (String check : checkStrings) {
+			int count = 0;
+			Pattern p = Pattern.compile(check);
+			Matcher m = p.matcher(fenByImages);
+			while (m.find()) {
+				count++;
+			}
+			if (count > 4)
+				return true;
+		}
+		return false;
 	}
 
 	private static String transFen(String fenByImages) {
-		 StringBuffer sb = new StringBuffer();
-		 int length = fenByImages.length();
-		    for (int i = length -1 ; i >= 0; i--) {
-		      sb.append(fenByImages.charAt(i));//使用StringBuffer从右往左拼接字符
-		    }
-		    return sb.toString();
+		StringBuffer sb = new StringBuffer();
+		int length = fenByImages.length();
+		for (int i = length - 1; i >= 0; i--) {
+			sb.append(fenByImages.charAt(i));// 使用StringBuffer从右往左拼接字符
+		}
+		return sb.toString();
 	}
 
 	private static void initTag(String fenByImages) {
