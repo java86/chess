@@ -18,7 +18,7 @@ public class StopCommand implements Runnable {
 	@Override
 	public void run() {
 		long currentTimeMillis = System.currentTimeMillis();
-		if (currentTimeMillis - StartChessEngine.updateTime > LIMITTIME) {
+		if (StartChessEngine.requestTime!=0&&!StartChessEngine.hasReturn&&currentTimeMillis - StartChessEngine.requestTime > LIMITTIME) {
 			try {
 				OutputStream outputStream = p.getOutputStream();
 				outputStream.write("stop\r\n".getBytes());

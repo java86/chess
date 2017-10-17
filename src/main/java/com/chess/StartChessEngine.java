@@ -15,7 +15,8 @@ import com.chess.utilities.RobotUtilities;
 
 public class StartChessEngine implements Runnable {
 	private Process p;
-	public static long updateTime = System.currentTimeMillis();
+	public static long requestTime = 0L;
+	public static boolean hasReturn = false;
 	static {
 		PropertyConfigurator.configure("log4j.properties");
 	}
@@ -43,7 +44,7 @@ public class StartChessEngine implements Runnable {
 
 	public static void main(String[] args) throws IOException {
 		// 使引擎在空闲状态
-		final String cmd = "chessEngine\\XQSPIRIT.exe";
+		final String cmd = "chessEngine\\XQSPIRIT.EXE";
 		Process p = Runtime.getRuntime().exec(cmd);
 		final OutputStream outputStream = p.getOutputStream();
 		outputStream.write("ucci\r\n".getBytes());

@@ -19,6 +19,8 @@ public class ChessEngineUtilities {
 		// outputStream.write("go depth 13\r\n".getBytes());
 		outputStream.write("go time 30 increase 0\r\n".getBytes());
 		outputStream.flush();
+		StartChessEngine.requestTime = System.currentTimeMillis();
+		StartChessEngine.hasReturn = false;
 		// 取得命令结果的输出流
 		InputStream fis = p.getInputStream();
 		// 用一个读输出流类去读
@@ -30,11 +32,11 @@ public class ChessEngineUtilities {
 			bestmove = br.readLine();
 			if (bestmove.startsWith("bestmove")) {
 				log.debug(bestmove);
-				StartChessEngine.updateTime = System.currentTimeMillis();
+				StartChessEngine.hasReturn = true;
 				return bestmove.substring(9, 13);
 			} else if (bestmove.startsWith("nobestmove")) {
 				log.debug(bestmove);
-				StartChessEngine.updateTime = System.currentTimeMillis();
+				StartChessEngine.hasReturn = true;
 				return "null";
 			}
 		}
