@@ -19,7 +19,7 @@ public class Image {
 		Robot robot = new Robot();
 		BufferedImage image = robot.createScreenCapture(screenRectangle);
 		DisplayUtilities.display(image);
-		robot.delay(5000);
+		robot.delay(5000);//
 	}
 
 }
