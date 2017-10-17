@@ -20,7 +20,6 @@ public class Image {
 		BufferedImage image = robot.createScreenCapture(screenRectangle);
 		DisplayUtilities.display(image);
 		robot.delay(5000);
-		System.out.println("");
 	}
 
 }
