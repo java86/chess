@@ -49,11 +49,11 @@ public class StartChessEngine implements Runnable {
 		outputStream.write("ucci\r\n".getBytes());
 		outputStream.write("setoption Hash 520\r\n".getBytes());
 		outputStream.flush();
-		// 开始挂机线程
-		ExecutorService exec = Executors.newCachedThreadPool();
-		exec.execute(new StartChessEngine(p));
 		// 开始检测定时器，要注意根据限时设置时间，要不会影响引擎的棋力
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 		executor.scheduleAtFixedRate(new StopCommand(p), 0, 2000, TimeUnit.MILLISECONDS);
+		// 开始挂机线程
+		ExecutorService exec = Executors.newCachedThreadPool();
+		exec.execute(new StartChessEngine(p));
 	}
 }
