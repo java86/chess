@@ -23,7 +23,6 @@ public class StopCommand implements Runnable {
 				OutputStream outputStream = p.getOutputStream();
 				outputStream.write("stop\r\n".getBytes());
 				outputStream.flush();
-				StartChessEngine.updateTime = System.currentTimeMillis();
 				log.debug("stop");
 			} catch (Exception e) {
 				e.printStackTrace();
