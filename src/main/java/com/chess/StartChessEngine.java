@@ -44,7 +44,7 @@ public class StartChessEngine implements Runnable {
 
 	public static void main(String[] args) throws IOException {
 		// 使引擎在空闲状态
-		final String cmd = "chessEngine\\BugCChess.EXE";
+		final String cmd = "chessEngine\\BugCChess.exe";
 		Process p = Runtime.getRuntime().exec(cmd);
 		final OutputStream outputStream = p.getOutputStream();
 		outputStream.write("ucci\r\n".getBytes());
