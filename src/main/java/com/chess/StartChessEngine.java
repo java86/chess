@@ -44,11 +44,11 @@ public class StartChessEngine implements Runnable {
 
 	public static void main(String[] args) throws IOException {
 		// 使引擎在空闲状态
-		final String cmd = "chessEngine\\XQSPIRIT.EXE";
+		final String cmd = "chessEngine\\BugCChess.EXE";
 		Process p = Runtime.getRuntime().exec(cmd);
 		final OutputStream outputStream = p.getOutputStream();
 		outputStream.write("ucci\r\n".getBytes());
-		outputStream.write("setoption Hash 520\r\n".getBytes());
+		outputStream.write("setoption Hash 256\r\n".getBytes());
 		outputStream.flush();
 		// 开始检测定时器，要注意根据限时设置时间，要不会影响引擎的棋力
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
