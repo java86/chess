@@ -30,6 +30,8 @@ public class ChessEngineUtilities {
 		String bestmove = null;
 		while (true) {
 			bestmove = br.readLine();
+			if(bestmove==null)
+				continue;
 			if (bestmove.startsWith("bestmove")) {
 				log.debug(bestmove);
 				StartChessEngine.hasReturn = true;
@@ -39,6 +41,7 @@ public class ChessEngineUtilities {
 				StartChessEngine.hasReturn = true;
 				return "null";
 			}
+			log.debug(bestmove);
 		}
 	}
 }
