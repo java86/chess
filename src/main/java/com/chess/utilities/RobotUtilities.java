@@ -1,6 +1,7 @@
 package com.chess.utilities;
 
 import java.awt.AWTException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +13,14 @@ import org.apache.log4j.Logger;
 import org.openimaj.image.MBFImage;
 
 import com.chess.constant.ChessFlag;
+import com.chess.model.Move;
 import com.chess.model.Point;
 
 public class RobotUtilities {
 	private static String flag;// 标明我方是红还是黑
 	private static String preFen = "RNBAKABNR/9/1C5C1/P1P1P1P1P/9/9/p1p1p1p1p/1c5c1/9/rnbakabnr";// 上一个局面，用于检测对方是否已经下棋。
+	private static String eatFen;// 上一个吃子局面，用于发送给引擎
+	private static List<Move> moves = new ArrayList<>();
 	private static final String RED = "w";// 红方
 	private static final String BLACK = "b";// 黑方
 	private static final List<Character> moveflag = Arrays
@@ -47,24 +51,17 @@ public class RobotUtilities {
 	}
 
 	public static void main(String[] args) throws AWTException {
-		// Robot robot = new Robot();
-		// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		// System.out.println(screenSize.getHeight());
-		// System.out.println(screenSize.getWidth());
-		// robot.mouseMove(1920, 1080);
-		// robot.mousePress(KeyEvent.BUTTON1_MASK);
-		// robot.mouseRelease(KeyEvent.BUTTON1_MASK);
-		// robot.mouseWheel(10000);
 		refreshFen("h0g2");
 		System.out.println(preFen);
 	}
 
 	public static void playByBestmove(String bestmove) throws AWTException {
+		// String transBestmove = bestmove;
 		try {
-			if ("b".equals(flag)) {
-				bestmove = transBestmove(bestmove);
-				log.debug("trans:  " + bestmove);
-			}
+			// if ("b".equals(flag)) {
+			// transBestmove = transBestmove(bestmove);
+			// log.debug("trans: " + bestmove);
+			// }
 			// 根据bestmove拿到屏幕坐标
 			Point[] clickPoints = ScreenUtilities.getPointsByBestmove(bestmove);
 			// 获取当前页面
@@ -76,11 +73,25 @@ public class RobotUtilities {
 			// 依次点击屏幕
 			MouseClickUtilities.clickInOrder(clickPoints);
 			// 更新当前局面
-			refreshFen(bestmove);
+			String refreshFen = refreshFen(bestmove);
+			// 更新move局面
+			refreshMoveFen(refreshFen, bestmove);
 		} catch (Exception e) {
 			return;// 不处理，有可能是切换界面导致的
 		}
 
+	}
+
+	private static void refreshMoveFen(String refreshFen, String bestmove) {
+		if (isEat(refreshFen)) {
+			// if ("b".equals(flag))
+			// eatFen = transFen(preFen);
+			// else
+			eatFen = preFen;
+			moves.clear();
+		} else {
+			moves.add(new Move(flag, bestmove));
+		}
 	}
 
 	private static String transBestmove(String bestmove) {
@@ -93,7 +104,7 @@ public class RobotUtilities {
 		return sb.toString();
 	}
 
-	private static void refreshFen(String bestmove) {
+	private static String refreshFen(String bestmove) {
 		String[] lineFens = preFen.split("/");
 		int length = lineFens.length;
 		// 处理起点坐标
@@ -126,8 +137,10 @@ public class RobotUtilities {
 		for (String s : lineFens) {
 			sb.append(s).append("/");
 		}
+		String preFenR = preFen;
 		preFen = sb.substring(0, sb.length() - 1);
 		log.info("playFen:" + preFen);
+		return preFenR;
 
 	}
 
@@ -188,18 +201,94 @@ public class RobotUtilities {
 				continue;
 			}
 			// check
-			if (check(fenByImages))
+			if (check(fenByImages)) {
+				Thread.sleep(3000);
 				continue;
+			}
 			log.debug("oldFen:" + preFen);
 			log.info("newFen:" + fenByImages);
 			preFen = fenByImages;
 			initTag(fenByImages);
-			if ("b".equals(flag))
-				fenByImages = transFen(fenByImages);
-			fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
+			// if ("b".equals(flag))
+			// fenByImages = transFen(fenByImages);
+			// 检查有没有吃子
+			if (isEat(fenByImages)) {
+				eatFen = fenByImages;
+				moves.clear();
+				fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
+			} else {
+				if (eatFen == null)
+					eatFen = flag.equals("w") ? "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR"
+							: "RNBAKABNR/9/1C5C1/P1P1P1P1P/9/9/p1p1p1p1p/1c5c1/9/rnbakabnr";
+				String move = analyzeMove(fenByImages);// 分析对方走了什么棋
+				String f = flag.equals("w") ? "b" : "w";
+				moves.add(new Move(f, move));
+				Move firstMove = moves.get(0);
+				fenByImages = "position fen " + eatFen + " " + firstMove.flag + " moves " + movesString() + "\r\n";
+			}
 			log.debug(fenByImages);
 			return fenByImages;
 		}
+	}
+
+	private static String analyzeMove(String fenByImages) {
+		String[] eatfens = eatFen.split("/");
+		String[] movefens = fenByImages.split("/");
+		int[] startPoint = new int[2];
+		int[] endPoint = new int[2];
+		int length = movefens.length;
+		for (int y = 0; y < length; y++) {
+			String movefen = movefens[y];
+			String eatfen = eatfens[y];
+			if (movefen.equals(eatfen))
+				continue;
+			char[] movefenchar = charCopy(movefen.toCharArray());
+			char[] eatfenchar = charCopy(eatfen.toCharArray());
+			int length2 = movefenchar.length;
+			for (int x = 0; x < length2; x++) {
+				char moveX = movefenchar[x];
+				char eatX = eatfenchar[x];
+				if (moveX == eatX)
+					continue;
+				if (moveX == 0) {
+					startPoint[0] = x;
+					startPoint[1] = y;
+				} else {
+					endPoint[0] = x;
+					endPoint[1] = y;
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(moveflag.get(startPoint[0])).append(9 - startPoint[1]).append(moveflag.get(endPoint[0]))
+				.append(9 - endPoint[1]);
+		return sb.toString();
+	}
+
+	private static String movesString() {
+		StringBuilder sb = new StringBuilder();
+		for (Move s : moves) {
+			sb.append(s.bestmove).append(" ");
+		}
+		return sb.toString().trim();
+	}
+
+	private static boolean isEat(String fenByImages) {
+		int chessCount = getChessCount(fenByImages);
+		int chessCount2 = getChessCount(preFen);
+		return chessCount != chessCount2;
+
+	}
+
+	private static int getChessCount(String fen) {
+		int count = 0;
+		int length = fen.length();
+		for (int i = 0; i < length; i++) {
+			char charAt = fen.charAt(i);
+			if (!Character.isDigit(charAt))
+				count++;
+		}
+		return count;
 	}
 
 	private static boolean check(String fenByImages) {

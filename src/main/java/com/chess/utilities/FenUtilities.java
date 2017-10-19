@@ -40,8 +40,8 @@ public class FenUtilities {
 			pieces.put("k", ImageUtilities.readMBF(new File("chessImage\\k.png")));
 			pieces.put("c", ImageUtilities.readMBF(new File("chessImage\\c.png")));
 			pieces.put("p", ImageUtilities.readMBF(new File("chessImage\\p.png")));
-			for(int i=0;i<90;i++){
-				pieces.put("s"+i, ImageUtilities.readMBF(new File("chessImage\\"+i+".png")));
+			for (int i = 0; i < 90; i++) {
+				pieces.put("s" + i, ImageUtilities.readMBF(new File("chessImage\\" + i + ".png")));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -97,7 +97,8 @@ public class FenUtilities {
 		}
 		if (countSpace != 0)
 			sb.append(countSpace);
-		return sb.toString();
+		// return sb.toString();
+		return "RNBAKABNR/9/4C2C1/P1P1P1P1P/9/9/p1p1p1p1p/1c5c1/9/rnbakabnr";
 	}
 
 	public static void main(String[] args) throws InterruptedException, AWTException {
