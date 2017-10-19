@@ -97,8 +97,7 @@ public class FenUtilities {
 		}
 		if (countSpace != 0)
 			sb.append(countSpace);
-		// return sb.toString();
-		return "RNBAKABNR/9/4C2C1/P1P1P1P1P/9/9/p1p1p1p1p/1c5c1/9/rnbakabnr";
+		return sb.toString();
 	}
 
 	public static void main(String[] args) throws InterruptedException, AWTException {
