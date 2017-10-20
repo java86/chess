@@ -37,7 +37,6 @@ public class StartChessEngine implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
 	public static void main(String[] args) throws IOException {
 		// 使引擎在空闲状态
 		final OutputStream outputStream = EngineProcess.getOutputStream();
@@ -48,7 +47,7 @@ public class StartChessEngine implements Runnable {
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 		executor.scheduleAtFixedRate(new StopCommand(), 0, 2000, TimeUnit.MILLISECONDS);
 		// 开始挂机线程
-		ExecutorService exec = Executors.newCachedThreadPool();
+		ExecutorService exec = Executors.newSingleThreadExecutor();
 		exec.execute(new StartChessEngine());
 	}
 }

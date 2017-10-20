@@ -18,7 +18,7 @@ import com.chess.model.Point;
 
 public class RobotUtilities {
 	private static String flag;// 标明我方是红还是黑
-	private static String preFen = "RNBAKABNR/9/1C5C1/P1P1P1P1P/9/9/p1p1p1p1p/1c5c1/9/rnbakabnr";// 上一个局面，用于检测对方是否已经下棋。
+	private static String preFen = "/9/9/9/9/9/9/9/9/9/9";// 上一个局面，用于检测对方是否已经下棋。
 	private static String eatFen;// 上一个吃子局面，用于发送给引擎
 	private static List<Move> moves = new ArrayList<>();
 	private static final String RED = "w";// 红方
@@ -63,11 +63,12 @@ public class RobotUtilities {
 			// log.debug("trans: " + bestmove);
 			// }
 			// 根据bestmove拿到屏幕坐标
-			Point[] clickPoints = ScreenUtilities.getPointsByBestmove(bestmove);
+			Point[] clickPoints = ScreenUtilities.getPointsByBestmove("b".equals(flag)?transBestmove(bestmove):bestmove);
 			// 获取当前页面
 			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities.grapChessPiecesByScreen();
 			// 获取当前局面的fen
 			String fenByImages = FenUtilities.getFenByImages(grapChessPiecesByScreen);
+			fenByImages="b".equals(flag)?transFen(fenByImages):fenByImages;
 			if (!fenByImages.equals(preFen))// 对方重新走棋。
 				return;
 			// 依次点击屏幕
@@ -77,7 +78,7 @@ public class RobotUtilities {
 			// 更新move局面
 			refreshMoveFen(refreshFen, bestmove);
 		} catch (Exception e) {
-			return;// 不处理，有可能是切换界面导致的
+			e.printStackTrace();
 		}
 
 	}
@@ -184,37 +185,34 @@ public class RobotUtilities {
 
 	public static String prepareToPlay() throws AWTException, InterruptedException {
 		while (true) {
+			Thread.sleep(3000);
 			// 检查当前界面
 			Point p = ScreenUtilities.needClick();
 			if (p != null) {
 				// 点击当前屏幕
 				MouseClickUtilities.clickByXY(p.x, p.y);
+				preFen="/9/9/9/9/9/9/9/9/9/9";
+				eatFen=null;
 				continue;
 			}
 			// 获取当前页面
 			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities.grapChessPiecesByScreen();
 			// 获取当前局面的fen
 			String fenByImages = FenUtilities.getFenByImages(grapChessPiecesByScreen);
+			initTag(fenByImages);
+			fenByImages="b".equals(flag)?transFen(fenByImages):fenByImages;
 			// 对方还没走棋，继续下一个循环
-			if (fenByImages.equals(preFen) || fenByImages.equals("9/9/9/9/9/9/9/9/9/9")) {
-				Thread.sleep(3000);
-				continue;
-			}
 			// check
 			if (check(fenByImages)) {
-				Thread.sleep(3000);
 				continue;
 			}
 			log.debug("oldFen:" + preFen);
 			log.info("newFen:" + fenByImages);
-			preFen = fenByImages;
-			initTag(fenByImages);
-			// if ("b".equals(flag))
-			// fenByImages = transFen(fenByImages);
 			// 检查有没有吃子
 			if (isEat(fenByImages)) {
 				eatFen = fenByImages;
 				moves.clear();
+				preFen = fenByImages;
 				fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
 			} else {
 				if (eatFen == null)
@@ -224,6 +222,7 @@ public class RobotUtilities {
 				String f = flag.equals("w") ? "b" : "w";
 				moves.add(new Move(f, move));
 				Move firstMove = moves.get(0);
+				preFen = fenByImages;
 				fenByImages = "position fen " + eatFen + " " + firstMove.flag + " moves " + movesString() + "\r\n";
 			}
 			log.debug(fenByImages);
@@ -232,7 +231,7 @@ public class RobotUtilities {
 	}
 
 	private static String analyzeMove(String fenByImages) {
-		String[] eatfens = eatFen.split("/");
+		String[] eatfens = preFen.split("/");
 		String[] movefens = fenByImages.split("/");
 		int[] startPoint = new int[2];
 		int[] endPoint = new int[2];
@@ -292,6 +291,8 @@ public class RobotUtilities {
 	}
 
 	private static boolean check(String fenByImages) {
+		if(fenByImages.equals(preFen)||!fenByImages.contains("k")||!fenByImages.contains("K")||("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR".equals(fenByImages)&&"b".equals(flag)))
+			return true;
 		for (String check : checkStrings) {
 			int count = 0;
 			Pattern p = Pattern.compile(check);

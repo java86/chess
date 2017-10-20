@@ -18,7 +18,7 @@ public class ChessEngineUtilities {
 		OutputStream outputStream = EngineProcess.getOutputStream();
 		outputStream.write(fen.getBytes());
 		outputStream.write("go depth 13\r\n".getBytes());
-		// outputStream.write("go time 30 increase 0\r\n".getBytes());
+//		 outputStream.write("go time 86 increase 0\r\n".getBytes());
 		outputStream.flush();
 		StartChessEngine.requestTime = System.currentTimeMillis();
 		StartChessEngine.hasReturn = false;

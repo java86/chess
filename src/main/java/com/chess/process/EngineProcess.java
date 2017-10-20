@@ -6,6 +6,8 @@ import java.io.OutputStream;
 
 public class EngineProcess {
 	private static Process p;
+	private static InputStream inputStream;
+	private static OutputStream outputStream;
 	static {
 		init();
 	}
@@ -14,28 +16,18 @@ public class EngineProcess {
 		final String cmd = "chessEngine\\BugCChess.exe";
 		try {
 			p = Runtime.getRuntime().exec(cmd);
+			 inputStream = p.getInputStream();
+			 outputStream = p.getOutputStream();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public synchronized static InputStream getInputStream() {
-		do {
-			InputStream inputStream = p.getInputStream();
-			if (inputStream == null)
-				init();
-			else
-				return inputStream;
-		} while (true);
+	public  static InputStream getInputStream() {
+		return inputStream;
 	}
 
-	public synchronized static OutputStream getOutputStream() {
-		do {
-			OutputStream outputStream = p.getOutputStream();
-			if (outputStream == null)
-				init();
-			else
-				return outputStream;
-		} while (true);
+	public  static OutputStream getOutputStream() {
+		return outputStream;
 	}
 }

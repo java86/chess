@@ -108,7 +108,7 @@ public class ScreenUtilities {
 		for (int index = 0; index < points.length; index++) {
 			BufferedImage pointImage = image.getSubimage(points[index].x, points[index].y, ChessPieceDefaultWidth,
 					ChessPieceDefaultHeight);
-			File f = new File("chessImage");
+			File f = new File("chessImage87");
 			if (!f.exists())
 				f.mkdirs();
 			f = new File(f, index + ".png");
