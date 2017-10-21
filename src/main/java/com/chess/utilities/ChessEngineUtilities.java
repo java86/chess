@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import org.apache.log4j.Logger;
 
 import com.chess.StartChessEngine;
+import com.chess.config.ChessEngineConfig;
 import com.chess.process.EngineProcess;
 
 public class ChessEngineUtilities {
@@ -17,8 +18,7 @@ public class ChessEngineUtilities {
 	public static String getBastMove(String fen) throws IOException {
 		OutputStream outputStream = EngineProcess.getOutputStream();
 		outputStream.write(fen.getBytes());
-		outputStream.write("go depth 13\r\n".getBytes());
-//		 outputStream.write("go time 86 increase 0\r\n".getBytes());
+		outputStream.write(ChessEngineConfig.goCommand.getBytes());
 		outputStream.flush();
 		StartChessEngine.requestTime = System.currentTimeMillis();
 		StartChessEngine.hasReturn = false;

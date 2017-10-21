@@ -5,10 +5,11 @@ import java.io.OutputStream;
 import org.apache.log4j.Logger;
 
 import com.chess.StartChessEngine;
+import com.chess.config.ChessEngineConfig;
 import com.chess.process.EngineProcess;
 
 public class StopCommand implements Runnable {
-	private static final long LIMITTIME = 1000 * 20;// 引擎最多可以考虑的时间，超过就要马上返回下法。
+	private static final long LIMITTIME = Integer.valueOf(ChessEngineConfig.limitTime);// 引擎最多可以考虑的时间，超过就要马上返回下法。
 	private Logger log = Logger.getLogger(StopCommand.class);
 
 	@Override

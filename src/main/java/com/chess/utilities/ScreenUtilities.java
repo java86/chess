@@ -13,10 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
 import org.openimaj.feature.DoubleFVComparison;
+import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.pixel.statistics.HistogramModel;
@@ -58,12 +60,14 @@ public class ScreenUtilities {
 			needCheckPointMBF.put(new Point(409, 676), ImageUtilities.readMBF(new File("checkImage/start.png")));
 			needCheckPointMBF.put(new Point(593, 395), ImageUtilities.readMBF(new File("checkImage/sure.png")));
 			needCheckPointMBF.put(new Point(584, 394), ImageUtilities.readMBF(new File("checkImage/agree.png")));
+			needCheckPointMBF.put(new Point(543, 408), ImageUtilities.readMBF(new File("checkImage/continuePlay.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		needCheckPoint.put(new Point(409, 676), new Integer[] { 53, 29 });
 		needCheckPoint.put(new Point(593, 395), new Integer[] { 81, 29 });
 		needCheckPoint.put(new Point(584, 394), new Integer[] { 78, 28 });
+		needCheckPoint.put(new Point(543, 408), new Integer[] { 101, 24 });
 	}
 
 	public static List<MBFImage> grapChessPiecesByScreen() throws AWTException {
@@ -114,6 +118,22 @@ public class ScreenUtilities {
 			f = new File(f, index + ".png");
 			ImageIO.write(pointImage, "png", f);
 		}
+		return chessPiecesMBFImages;
+	}
+	public static List<MBFImage> grapChessPiecesByScreen3() throws AWTException, IOException {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		screenSize.setSize(CChessDefaultWidth, CChessDefaultHeight);
+		Rectangle screenRectangle = new Rectangle(screenSize);
+		Robot robot = new Robot();
+		BufferedImage image = robot.createScreenCapture(screenRectangle);
+		List<MBFImage> chessPiecesMBFImages = new ArrayList<>();
+		BufferedImage pointImage = image.getSubimage(543, 408, 101,
+				24);
+		File f = new File("chessImage87");
+		if (!f.exists())
+			f.mkdirs();
+		f = new File(f, 1 + ".png");
+		ImageIO.write(pointImage, "png", f);
 		return chessPiecesMBFImages;
 	}
 
