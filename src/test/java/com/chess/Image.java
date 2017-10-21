@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import org.junit.Test;
 import org.openimaj.image.DisplayUtilities;
@@ -20,6 +21,11 @@ public class Image {
 		BufferedImage image = robot.createScreenCapture(screenRectangle);
 		DisplayUtilities.display(image);
 		robot.delay(5000);
+	}
+	@Test
+	public void path(){
+		String path = System.getProperty("user.dir");
+		System.out.println(new File("chessEngine/BugCChess.exe").getPath());
 	}
 
 }

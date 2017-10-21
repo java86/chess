@@ -13,7 +13,7 @@ public class EngineProcess {
 	}
 
 	private static void init() {
-		final String cmd = "chessEngine\\BugCChess.exe";
+		final String cmd = "chessEngine/BugCChess.exe";
 		try {
 			p = Runtime.getRuntime().exec(cmd);
 			 inputStream = p.getInputStream();

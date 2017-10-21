@@ -55,9 +55,9 @@ public class ScreenUtilities {
 			bestmoveMap.put(flag[flagIndex] + lineNum, points[index]);
 		}
 		try {
-			needCheckPointMBF.put(new Point(409, 676), ImageUtilities.readMBF(new File("checkImage\\start.png")));
-			needCheckPointMBF.put(new Point(593, 395), ImageUtilities.readMBF(new File("checkImage\\sure.png")));
-			needCheckPointMBF.put(new Point(584, 394), ImageUtilities.readMBF(new File("checkImage\\agree.png")));
+			needCheckPointMBF.put(new Point(409, 676), ImageUtilities.readMBF(new File("checkImage/start.png")));
+			needCheckPointMBF.put(new Point(593, 395), ImageUtilities.readMBF(new File("checkImage/sure.png")));
+			needCheckPointMBF.put(new Point(584, 394), ImageUtilities.readMBF(new File("checkImage/agree.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

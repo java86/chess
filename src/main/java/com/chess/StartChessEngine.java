@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.chess.command.StopCommand;
@@ -17,8 +18,10 @@ import com.chess.utilities.RobotUtilities;
 public class StartChessEngine implements Runnable {
 	public static long requestTime = 0L;
 	public static boolean hasReturn = false;
+	private static Logger log ;
 	static {
 		PropertyConfigurator.configure("log4j.properties");
+		log= Logger.getLogger(RobotUtilities.class);
 	}
 
 	@Override
@@ -49,5 +52,6 @@ public class StartChessEngine implements Runnable {
 		// 开始挂机线程
 		ExecutorService exec = Executors.newSingleThreadExecutor();
 		exec.execute(new StartChessEngine());
+		log.debug("engine starting success!!");
 	}
 }
