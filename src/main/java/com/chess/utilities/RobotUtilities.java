@@ -19,6 +19,7 @@ import com.chess.model.Point;
 public class RobotUtilities {
 	private static String flag;// 标明我方是红还是黑
 	private static String preFen = "/9/9/9/9/9/9/9/9/9/9";// 上一个局面，用于检测对方是否已经下棋。
+	private static String prePlay = "/9/9/9/9/9/9/9/9/9/9";// 上一个局面，用于检测我方是否已经下棋。
 	private static String eatFen;// 上一个吃子局面，用于发送给引擎
 	private static List<Move> moves = new ArrayList<>();
 	private static final String RED = "w";// 红方
@@ -206,6 +207,10 @@ public class RobotUtilities {
 			if (check(fenByImages)) {
 				continue;
 			}
+			//我方没成功走棋
+			if(fenByImages.equals(prePlay)){
+				preFen="/9/9/9/9/9/9/9/9/9/9";
+			}
 			log.debug("oldFen:" + preFen);
 			log.info("newFen:" + fenByImages);
 			// 检查有没有吃子
@@ -213,6 +218,7 @@ public class RobotUtilities {
 				eatFen = fenByImages;
 				moves.clear();
 				preFen = fenByImages;
+				prePlay=fenByImages;
 				fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
 			} else {
 				if (eatFen == null)
@@ -223,6 +229,7 @@ public class RobotUtilities {
 				moves.add(new Move(f, move));
 				Move firstMove = moves.get(0);
 				preFen = fenByImages;
+				prePlay=fenByImages;
 				fenByImages = "position fen " + eatFen + " " + firstMove.flag + " moves " + movesString() + "\r\n";
 			}
 			log.debug(fenByImages);
