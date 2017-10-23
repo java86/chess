@@ -9,6 +9,7 @@ import java.util.Properties;
 public class ChessEngineConfig {
 	public static  String goCommand;
 	public static  String limitTime;
+	public static  String engine;
 	static{
 		init();
 	}
@@ -19,6 +20,7 @@ public class ChessEngineConfig {
 			prop.load(in);
 			goCommand=prop.getProperty("goCommand");
 			limitTime=prop.getProperty("limitTime");
+			engine=prop.getProperty("engine");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

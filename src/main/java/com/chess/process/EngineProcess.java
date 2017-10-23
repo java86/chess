@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.chess.config.ChessEngineConfig;
+
 public class EngineProcess {
 	private static Process p;
 	private static InputStream inputStream;
@@ -13,7 +15,7 @@ public class EngineProcess {
 	}
 
 	private static void init() {
-		final String cmd = "chessEngine/BugCChess.exe";
+		final String cmd = "chessEngine/"+ChessEngineConfig.engine;
 		try {
 			p = Runtime.getRuntime().exec(cmd);
 			 inputStream = p.getInputStream();
