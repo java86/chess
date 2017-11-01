@@ -37,7 +37,8 @@ public class ChessEngineUtilities {
 				log.debug(bestmove);
 				StartChessEngine.hasReturn = true;
 				return bestmove.substring(9, 13);
-			} else if (bestmove.startsWith("nobestmove")) {
+			} else if (bestmove.startsWith("nobestmove")
+					   ||(System.currentTimeMillis()-StartChessEngine.requestTime)>1000*60*5) {
 				log.debug(bestmove);
 				StartChessEngine.hasReturn = true;
 				return "null";

@@ -59,6 +59,7 @@ public class ScreenUtilities {
 			needCheckPointMBF.put(new Point(593, 395), ImageUtilities.readMBF(new File("checkImage/sure.png")));
 			needCheckPointMBF.put(new Point(584, 394), ImageUtilities.readMBF(new File("checkImage/agree.png")));
 			needCheckPointMBF.put(new Point(543, 408), ImageUtilities.readMBF(new File("checkImage/continuePlay.png")));
+			needCheckPointMBF.put(new Point(644, 424), ImageUtilities.readMBF(new File("checkImage/continueTest.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -66,6 +67,7 @@ public class ScreenUtilities {
 		needCheckPoint.put(new Point(593, 395), new Integer[] { 81, 29 });
 		needCheckPoint.put(new Point(584, 394), new Integer[] { 78, 28 });
 		needCheckPoint.put(new Point(543, 408), new Integer[] { 101, 24 });
+		needCheckPoint.put(new Point(644, 424), new Integer[] { 99,26 });
 	}
 
 	public static List<MBFImage> grapChessPiecesByScreen() throws AWTException {
@@ -125,8 +127,8 @@ public class ScreenUtilities {
 		Robot robot = new Robot();
 		BufferedImage image = robot.createScreenCapture(screenRectangle);
 		List<MBFImage> chessPiecesMBFImages = new ArrayList<>();
-		BufferedImage pointImage = image.getSubimage(543, 408, 101,
-				24);
+		BufferedImage pointImage = image.getSubimage(644, 424, 99,
+				26);
 		File f = new File("chessImage87");
 		if (!f.exists())
 			f.mkdirs();
@@ -136,7 +138,7 @@ public class ScreenUtilities {
 	}
 
 	public static void main(String[] args) throws AWTException, InterruptedException, IOException {
-		grapChessPiecesByScreen2();
+		grapChessPiecesByScreen3();
 	}
 
 	public static Point needClick() throws AWTException {
