@@ -25,7 +25,8 @@ public class RobotUtilities {
 	private static final String RED = "w";// 红方
 	private static final String BLACK = "b";// 黑方
 	private static final List<Character> moveflag = Arrays
-			.asList(new Character[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' });
+			.asList(new Character[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+					'i' });
 	private static final Map<Character, Character> transMap = new HashMap<>();
 	private static final String[] checkStrings = new String[] { "b", "r" };
 	private static Logger log = Logger.getLogger(RobotUtilities.class);
@@ -64,12 +65,16 @@ public class RobotUtilities {
 			// log.debug("trans: " + bestmove);
 			// }
 			// 根据bestmove拿到屏幕坐标
-			Point[] clickPoints = ScreenUtilities.getPointsByBestmove("b".equals(flag)?transBestmove(bestmove):bestmove);
+			Point[] clickPoints = ScreenUtilities.getPointsByBestmove("b"
+					.equals(flag) ? transBestmove(bestmove) : bestmove);
 			// 获取当前页面
-			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities.grapChessPiecesByScreen();
+			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities
+					.grapChessPiecesByScreen();
 			// 获取当前局面的fen
-			String fenByImages = FenUtilities.getFenByImages(grapChessPiecesByScreen);
-			fenByImages="b".equals(flag)?transFen(fenByImages):fenByImages;
+			String fenByImages = FenUtilities
+					.getFenByImages(grapChessPiecesByScreen);
+			fenByImages = "b".equals(flag) ? transFen(fenByImages)
+					: fenByImages;
 			if (!fenByImages.equals(preFen))// 对方重新走棋。
 				return;
 			// 依次点击屏幕
@@ -111,7 +116,8 @@ public class RobotUtilities {
 		int length = lineFens.length;
 		// 处理起点坐标
 		String startPoint = bestmove.substring(0, 2);
-		Integer startLineNum = length - (Integer.valueOf(startPoint.charAt(1)) - 48) - 1;
+		Integer startLineNum = length
+				- (Integer.valueOf(startPoint.charAt(1)) - 48) - 1;
 		int startIndexOfLine = moveflag.indexOf(startPoint.charAt(0));
 		String startlineFen = lineFens[startLineNum];// 找出起点坐标所在行
 		// 找出位于起点坐标的棋子，移除
@@ -124,7 +130,8 @@ public class RobotUtilities {
 		lineFens[startLineNum] = startReplace;
 		// 处理终点坐标
 		String endPoint = bestmove.substring(2, 4);
-		Integer endLineNum = length - (Integer.valueOf(endPoint.charAt(1)) - 48) - 1;
+		Integer endLineNum = length
+				- (Integer.valueOf(endPoint.charAt(1)) - 48) - 1;
 		int endIndexOfLine = moveflag.indexOf(endPoint.charAt(0));
 		String endLineFen = lineFens[endLineNum];// 找出终点坐标所在行
 		// 找出终点坐标的格子，替换成走棋后的棋子
@@ -184,7 +191,8 @@ public class RobotUtilities {
 		return startCharCopy;
 	}
 
-	public static String prepareToPlay() throws AWTException, InterruptedException {
+	public static String prepareToPlay() throws AWTException,
+			InterruptedException {
 		while (true) {
 			Thread.sleep(3000);
 			// 检查当前界面
@@ -192,24 +200,30 @@ public class RobotUtilities {
 			if (p != null) {
 				// 点击当前屏幕
 				MouseClickUtilities.clickByXY(p.x, p.y);
-				preFen="/9/9/9/9/9/9/9/9/9/9";
-				eatFen=null;
+				preFen = "/9/9/9/9/9/9/9/9/9/9";
+				eatFen = null;
 				continue;
 			}
+			// 满50步没吃子新中国象棋会弹出提示框，影响棋盘抓取。坑爹，不想去对比画面了，每次抓取的时候都点一下确定的坐标吧，我的是（679,411）
+			MouseClickUtilities.clickByXY(679, 411);
+			MouseClickUtilities.clickByXY(679, 411);// 点两次棋子就是等于没点。
 			// 获取当前页面
-			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities.grapChessPiecesByScreen();
+			List<MBFImage> grapChessPiecesByScreen = ScreenUtilities
+					.grapChessPiecesByScreen();
 			// 获取当前局面的fen
-			String fenByImages = FenUtilities.getFenByImages(grapChessPiecesByScreen);
+			String fenByImages = FenUtilities
+					.getFenByImages(grapChessPiecesByScreen);
 			initTag(fenByImages);
-			fenByImages="b".equals(flag)?transFen(fenByImages):fenByImages;
+			fenByImages = "b".equals(flag) ? transFen(fenByImages)
+					: fenByImages;
 			// 对方还没走棋，继续下一个循环
 			// check
 			if (check(fenByImages)) {
 				continue;
 			}
-			//我方没成功走棋
-			if(fenByImages.equals(prePlay)){
-				preFen="/9/9/9/9/9/9/9/9/9/9";
+			// 我方没成功走棋
+			if (fenByImages.equals(prePlay)) {
+				preFen = "/9/9/9/9/9/9/9/9/9/9";
 			}
 			log.debug("oldFen:" + preFen);
 			log.info("newFen:" + fenByImages);
@@ -218,8 +232,9 @@ public class RobotUtilities {
 				eatFen = fenByImages;
 				moves.clear();
 				preFen = fenByImages;
-				prePlay=fenByImages;
-				fenByImages = "position fen " + fenByImages + " " + flag + "\r\n";
+				prePlay = fenByImages;
+				fenByImages = "position fen " + fenByImages + " " + flag
+						+ "\r\n";
 			} else {
 				if (eatFen == null)
 					eatFen = flag.equals("w") ? "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR"
@@ -229,8 +244,9 @@ public class RobotUtilities {
 				moves.add(new Move(f, move));
 				Move firstMove = moves.get(0);
 				preFen = fenByImages;
-				prePlay=fenByImages;
-				fenByImages = "position fen " + eatFen + " " + firstMove.flag + " moves " + movesString() + "\r\n";
+				prePlay = fenByImages;
+				fenByImages = "position fen " + eatFen + " " + firstMove.flag
+						+ " moves " + movesString() + "\r\n";
 			}
 			log.debug(fenByImages);
 			return fenByImages;
@@ -266,8 +282,8 @@ public class RobotUtilities {
 			}
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append(moveflag.get(startPoint[0])).append(9 - startPoint[1]).append(moveflag.get(endPoint[0]))
-				.append(9 - endPoint[1]);
+		sb.append(moveflag.get(startPoint[0])).append(9 - startPoint[1])
+				.append(moveflag.get(endPoint[0])).append(9 - endPoint[1]);
 		return sb.toString();
 	}
 
@@ -298,7 +314,11 @@ public class RobotUtilities {
 	}
 
 	private static boolean check(String fenByImages) {
-		if(fenByImages.equals(preFen)||!fenByImages.contains("k")||!fenByImages.contains("K")||("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR".equals(fenByImages)&&"b".equals(flag)))
+		if (fenByImages.equals(preFen)
+				|| !fenByImages.contains("k")
+				|| !fenByImages.contains("K")
+				|| ("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR"
+						.equals(fenByImages) && "b".equals(flag)))
 			return true;
 		for (String check : checkStrings) {
 			int count = 0;
